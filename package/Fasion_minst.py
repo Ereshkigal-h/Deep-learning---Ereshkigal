@@ -10,7 +10,7 @@ def get_dataloader_workers():  # cpu核数确定
 
 
 def load_data_fasion_minst(batch_size, resize=None):
-    trans = [transforms.ToTensor()]  # 列表如果有后续操作可以直接写列表里面
+    trans = [transforms.ToTensor()]  # 列表如果有后续操作可以直接写列表里面,这里的操作是成为一个张量
     if resize:  # python中，只要非空就视为真
         trans.insert(0, transforms.Resize(resize))  # 在train列表之前加上一个变形，他会按顺序执行的
     trans = transforms.Compose(trans)  # 组合计算之前trans列表里的组合，使其成为一个可用对象

@@ -160,7 +160,7 @@ def train_ch3(net, train_iter, test_iter, loss, num_epochs, updater):  # @save#�
     for epoch in range(num_epochs):
         train_metrics = train_epoch_ch3(net, train_iter, loss, updater)  # 进行训练
         test_acc = evaluate_accuracy(net, test_iter)  # 进行评估
-        #animator.add(epoch + 1, train_metrics + (test_acc,))# 动画演示
+        animator.add(epoch + 1, train_metrics + (test_acc,))# 动画演示
     train_loss, train_acc = train_metrics  # 得出结果
     assert train_loss < 0.5, train_loss
     assert train_acc <= 1 and train_acc > 0.7, train_acc

@@ -17,6 +17,6 @@ def init_weights(m):  # 正态分布初始化权重
 
 net.apply(init_weights)  # PyTorch 中用于初始化神经网络模型中所有层的参数的语句
 loss = nn.CrossEntropyLoss()  # 直接就是交叉熵损失函数，轮椅啊
-trainer = torch.optim.SGD(net.parameters(),lr=0)  # parameters(): 这是 nn.Module 类中的一个方法，用于返回模型中所有可学习的参数（如权重和偏置）的迭代器。它会遍历模型的每一层，并收集所有的参数。
+trainer = torch.optim.SGD(net.parameters(),lr=0.1)  # parameters(): 这是 nn.Module 类中的一个方法，用于返回模型中所有可学习的参数（如权重和偏置）的迭代器。它会遍历模型的每一层，并收集所有的参数。
 num_epochs = 10
 train_ch3(net, train_iter, test_iter, loss, num_epochs, trainer)  # 引用之前的函数

@@ -18,10 +18,12 @@ features, labels = d2l.synthetic_data(true_w, true_b, 1000)  # 有函数直接�
 batch_size = 10
 data_iter = load_array((features, labels), batch_size)  # 创建一个生成器，每次返回一个小训练集
 net = nn.Sequential(nn.Linear(2, 1))  # 创建线性单层神经网络
-net[0].weight.data.normal_(0, 0.01)  # 逐级访问weight（w）的数据，使用normal_修改数据，normal是规定一个正态分布
+#net[0].weight.data.normal_(0, 0.01)  # 逐级访问weight（w）的数据，使用normal_修改数据，normal是规定一个正态分布
+#net[0].weight.data.fill_(0)好像没什么影响
+print(net[0].weight.data)
 net[0].bias.data.fill_(0)  # 找到第一层网络的b来更新b值
 loss = nn.MSELoss()  # 自定义均方误差，根据前面定义的自动计算
-trainer = torch.optim.SGD(net.parameters(), lr=0.04)  # sgd算法，net.parameters是包含了net内的参数（w，b），这里只是创建优化器并没有实际执行优化
+trainer = torch.optim.SGD(net.parameters(), lr=0.03)  # sgd算法，net.parameters是包含了net内的参数（w，b），这里只是创建优化器并没有实际执行优化
 num_epochs = 10
 for epochs in range(num_epochs):
     for X, y in data_iter:

@@ -114,11 +114,12 @@ def train_epoch_ch3(net, train_iter, loss, updater):
 
 def train_ch3(net, train_iter, test_iter, loss, num_epochs, updater):  # @save#是上面全部的主函数，同时有训练和评估功能
     """训练模型（定义见第3章）"""
-    animator = Animator(xlabel='epoch', xlim=[1, num_epochs], ylim=[0.3, 0.9],
-                        legend=['train loss', 'train acc', 'test acc'])  # 动画实现，不用知道
+    #animator = Animator(xlabel='epoch', xlim=[1, num_epochs], ylim=[0.3, 0.9],
+                        #legend=['train loss', 'train acc', 'test acc'])  # 动画实现，不用知道
     for epoch in range(num_epochs):
         train_metrics = train_epoch_ch3(net, train_iter, loss, updater)  # 进行训练
         test_acc = evaluate_accuracy(net, test_iter)  # 进行评估
+        print(train_metrics,test_acc)
         # animator.add(epoch + 1, train_metrics + (test_acc,))# 动画演示
     train_loss, train_acc = train_metrics  # 得出结果
     assert train_loss < 0.5, train_loss
