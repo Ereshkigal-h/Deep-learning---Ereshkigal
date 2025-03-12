@@ -1,0 +1,29 @@
+import torch
+from torch.utils.data import Dataset
+from torch.utils.data import DataLoader
+import pandas
+#预测每个站的流量是模型的主要目的，如果要按照
+def initialize(sequence_length,batch_size,filepath=None, sheet_name=None,skiprows=0, skipfooter=0):
+    file_name = filepath
+    assert (file_name is not None) or type(file_name) == str
+    data = pandas.read_excel(filepath, sheet_name=sheet_name, skiprows=skiprows, skipfooter=skipfooter,
+                                  index_col=0)
+    data.fillna(method='ffill', inplace=True)  # 缺失值补齐
+    data_array = data.to_numpy()
+    tensor_data = torch.tensor(data_array)
+    train_data=ExcelDataset(7,tensor_data[:int(len(tensor_data)*0.8)])
+    test_data=ExcelDataset(7,tensor_data[int(len(tensor_data)*0.8):])
+    train_iter=DataLoader(train_data)
+    test_iter=DataLoader(test_data)
+    return train_iter,train_iter
+class ExcelDataset(Dataset):
+    def __init__(self, sequence_length,torch_file):
+        self.tensor_data=torch_file
+        self.sequence_length=sequence_length
+    def __getitem__(self, idx):
+        x=self.tensor_data[idx:idx+self.sequence_length]
+        y=self.tensor_data[idx+self.sequence_length]
+        return x.float(),y.float()
+    def __len__(self):
+        return len(self.tensor_data)-self.sequence_length
+#initialize(7,filepath='new_sheet.xlsx',sheet_name=0)

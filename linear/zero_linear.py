@@ -45,7 +45,7 @@ def squared_loss(y_hat, y):  # 均方损失,y_hat是预测值
 def sgd(params, lr, batch_size):  # params是参数列表（包含w和b）之后将每个参数选一遍做梯度下降算法
     with torch.no_grad():
         for param in params:
-            param -= lr * param.grad / batch_size  # 梯度下降算法，lr是学习率，batch/size前面没有除现在除实际上是包含在param.grad里面的
+            param -= lr * param.grad / batch_size  # 梯度下降算法，lr是学习率，batch_size前面没有除现在除实际上是包含在param.grad里面的
             #param -= lr * param.grad / batch_size 会同时更新 param 中的所有元素根据每个元素不同的梯度进行更新，所以是元素级操作
             param.grad.zero_()  # 梯度清零计算
 
