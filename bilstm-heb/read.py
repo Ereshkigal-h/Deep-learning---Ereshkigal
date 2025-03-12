@@ -1,21 +1,32 @@
+import pandas as pd
 import torch
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
-import pandas
+from sklearn.preprocessing import MinMaxScaler
+
 #预测每个站的流量是模型的主要目的，如果要按照
-def initialize(sequence_length,batch_size,filepath=None, sheet_name=None,skiprows=0, skipfooter=0):
+def initialize(sequence_length, batch_size, filepath=None, sheet_name=None, skiprows=0, skipfooter=0):
     file_name = filepath
-    assert (file_name is not None) or type(file_name) == str
-    data = pandas.read_excel(filepath, sheet_name=sheet_name, skiprows=skiprows, skipfooter=skipfooter,
-                                  index_col=0)
+    assert isinstance(file_name, str), "filepath must be a string"
+    data = pd.read_excel(filepath, sheet_name=sheet_name, skiprows=skiprows, skipfooter=skipfooter,
+                         index_col=0)
     data.fillna(method='ffill', inplace=True)  # 缺失值补齐
     data_array = data.to_numpy()
-    tensor_data = torch.tensor(data_array)
-    train_data=ExcelDataset(7,tensor_data[:int(len(tensor_data)*0.8)])
-    test_data=ExcelDataset(7,tensor_data[int(len(tensor_data)*0.8):])
-    train_iter=DataLoader(train_data)
-    test_iter=DataLoader(test_data)
-    return train_iter,train_iter
+
+    # 创建 MinMaxScaler 对象
+    scaler = MinMaxScaler()
+    # 拟合数据并进行归一化
+    normalized_data_array = scaler.fit_transform(data_array)
+
+    tensor_data = torch.tensor(normalized_data_array, dtype=torch.float32)
+
+    train_data = ExcelDataset(sequence_length, tensor_data[:int(len(tensor_data) * 0.8)])
+    test_data = ExcelDataset(sequence_length, tensor_data[int(len(tensor_data) * 0.8):])
+    train_iter = DataLoader(train_data, batch_size)
+    test_iter = DataLoader(test_data, batch_size)
+    return train_iter, test_iter, scaler
+
+
 class ExcelDataset(Dataset):
     def __init__(self, sequence_length,torch_file):
         self.tensor_data=torch_file
