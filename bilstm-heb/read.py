@@ -13,8 +13,8 @@ def initialize(sequence_length,batch_size,filepath=None, sheet_name=None,skiprow
     tensor_data = torch.tensor(data_array)
     train_data=ExcelDataset(7,tensor_data[:int(len(tensor_data)*0.8)])
     test_data=ExcelDataset(7,tensor_data[int(len(tensor_data)*0.8):])
-    train_iter=DataLoader(train_data)
-    test_iter=DataLoader(test_data)
+    train_iter=DataLoader(train_data,batch_size=batch_size)
+    test_iter=DataLoader(test_data,batch_size=batch_size)
     return train_iter,train_iter
 class ExcelDataset(Dataset):
     def __init__(self, sequence_length,torch_file):
